@@ -1,11 +1,21 @@
 Package: GART
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Guided Adversarial Robust Transfer Learning with Source Mixing
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Author: Xin Xiong, Zijian Guo, Tianxi Cai
+Maintainer: Xin Xiong <xinxiong@hsph.harvard.edu>
+Description: Many existing transfer learning methods rely on leveraging information from source data
+  that closely resembles the target data. However, this approach often overlooks valuable knowledge that
+  may be present in different yet potentially related auxiliary samples. When dealing with a limited amount
+  of target data and a diverse range of source models, our paper introduces a novel approach, 
+  Guided Adversarial Robust Transfer (GART) Learning, that breaks free from strict similarity constraints. 
+  GART is designed to optimize the most adversarial loss within an uncertainty set, defined as a collection of target
+  populations generated as a convex combination of source distributions that guarantee ex-
+  cellent prediction performances for the target data. GART effectively bridges the realms of
+  transfer learning and distributional robustness prediction models. We establish the iden-
+  tifiability of GART and its interpretation as a weighted average of source models closest
+  to the baseline model. We also show that GART achieves a faster convergence rate than
+  the model fitted with the target data. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
