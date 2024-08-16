@@ -19,7 +19,7 @@ GART <- function(data, base_names = 'weighted', tau = NULL,
   }
   result = list(`est` = est_model)
   if(is_valid){
-    message('Valid model performance..')
+    message('Valid model performance...')
     eval = GART_eval(beta_est, data_valid)
     result = list(`est` = est_model,
                   `eval` = eval)
