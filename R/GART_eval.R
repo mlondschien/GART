@@ -1,11 +1,13 @@
 compare_est <- function(B_source_hat, X_source, y_source, X_target, y_target){
   L = length(X_source)
 
+  print("target only")
   ## target only estimator
-  out = glmnet::cv.glmnet(X_target, y_target)
-  out = glmnet::glmnet(X_target, y_target, lambda = out$lambda.min, intercept = T)
+  out = glmnet::cv.glmnet(X_target, y_target, standardize=F)
+  out = glmnet::glmnet(X_target, y_target, lambda = out$lambda.min, intercept = T, standardize = F)
   beta_target = stats::coef(out)
 
+  print("linear source estimator")
   ## best linear source estimator
   Sigma_Q_hat = t(X_target) %*% X_target / nrow(X_target)
   Gamma_beta_hat = t(B_source_hat) %*% Sigma_Q_hat %*% B_source_hat
@@ -21,7 +23,7 @@ compare_est <- function(B_source_hat, X_source, y_source, X_target, y_target){
   gamma_linear_source = as.vector(result$getValue(gammaHat))
   beta_linear_source = c(beta_target[1], B_source_hat %*% gamma_linear_source)
 
-
+  print("maximin")
   ## maximin
   gammaHat <- CVXR::Variable(ncol(B_source_hat))
   objective <- CVXR::Minimize(CVXR::quad_form(gammaHat, Gamma_beta_hat))
@@ -31,17 +33,18 @@ compare_est <- function(B_source_hat, X_source, y_source, X_target, y_target){
   gamma_maximin = as.vector(result$getValue(gammaHat))
   beta_maximin = c(beta_target[1], B_source_hat %*% gamma_maximin)
 
-
+  print("TransGLM")
   ## TransGLM
-  source_data = sapply(1:L, function(i){
-    list(`x` = X_source[[i]], `y` = y_source[[i]])
-  }, simplify = FALSE)
-  target_data = list(`x` = X_target, `y` = y_target)
-  out_transglm = glmtrans::glmtrans(target = target_data,  source = source_data, family = "gaussian",
-                          intercept = TRUE, detection.info = FALSE)
-  beta_transglm = out_transglm$beta
+  # source_data = sapply(1:L, function(i){
+  #   list(`x` = X_source[[i]], `y` = y_source[[i]])
+  # }, simplify = FALSE)
+  # target_data = list(`x` = X_target, `y` = y_target)
+  # out_transglm = glmtrans::glmtrans(target = target_data,  source = source_data, family = "gaussian",
+  #                         intercept = TRUE, detection.info = FALSE)
+  # beta_transglm = out_transglm$beta
+  beta_transglm = rep(0, length(beta_target))
 
-
+  print("TransLasso")
   ## TransLasso
   n.vec = c(nrow(X_target), sapply(X_source, FUN = nrow))
   X_source_matrix = do.call(rbind, X_source)

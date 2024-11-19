@@ -44,9 +44,9 @@ GART_est <- function(data, base_names, tau = NULL, is_benchmark = F){
   X_source_matrix = Reduce(rbind, X_source)
   y_source_vec = unlist(y_source)
   B_source_hat = sapply(1:L, function(l){
-    est = glmnet::cv.glmnet(X_source[[l]], y_source[[l]])
+    est = glmnet::cv.glmnet(X_source[[l]], y_source[[l]], standardize=F)
     est = glmnet::glmnet(X_source[[l]], y_source[[l]],
-                         lambda = est$lambda.min)
+                         lambda = est$lambda.min, standardize=F)
     b_l = stats::coef(est)
     return(as.vector(b_l))
   })
@@ -55,8 +55,8 @@ GART_est <- function(data, base_names, tau = NULL, is_benchmark = F){
     B_source_hat = B_source_hat[-1, ]
   }
 
-  est = glmnet::cv.glmnet(X_target, y_target)
-  est = glmnet::glmnet(X_target, y_target, lambda = est$lambda.min)
+  est = glmnet::cv.glmnet(X_target, y_target, standardize=F)
+  est = glmnet::glmnet(X_target, y_target, lambda = est$lambda.min, standardize=F)
   b_l = stats::coef(est)
   if(!trans_intercept){
     beta_target_full_intercept = b_l[1]
@@ -72,8 +72,8 @@ GART_est <- function(data, base_names, tau = NULL, is_benchmark = F){
     for(fold in c(0, 1)){
       test_rid = (1:N_target)[((1:N_target) %% 2) == fold]
       train_rid = setdiff(1:N_target, test_rid)
-      est = glmnet::cv.glmnet(X_target[train_rid, ], y_target[train_rid])
-      est = glmnet::glmnet(X_target[train_rid, ], y_target[train_rid], lambda = est$lambda.min)
+      est = glmnet::cv.glmnet(X_target[train_rid, ], y_target[train_rid], standardize=F)
+      est = glmnet::glmnet(X_target[train_rid, ], y_target[train_rid], lambda = est$lambda.min, standardize=F)
       b_l = stats::coef(est)
       if(!trans_intercept){
         b_l = b_l[-1]
