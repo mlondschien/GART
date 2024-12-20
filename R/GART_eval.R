@@ -44,25 +44,26 @@ compare_est <- function(B_source_hat, X_source, y_source, X_target, y_target){
   # beta_transglm = out_transglm$beta
   beta_transglm = rep(0, length(beta_target))
 
-  print("TransLasso")
+  # print("TransLasso")
   ## TransLasso
-  n.vec = c(nrow(X_target), sapply(X_source, FUN = nrow))
-  X_source_matrix = do.call(rbind, X_source)
-  y_source_vec = do.call(rbind, y_source)
-  prop.re1 <- tryCatch(Trans.lasso(rbind(X_target, X_source_matrix),
-                                   c(y_target, y_source_vec), n.vec,
-                                   I.til = 1:round(n_target/2), l1 = T), error = function(e) NULL)
+  # n.vec = c(nrow(X_target), sapply(X_source, FUN = nrow))
+  # X_source_matrix = do.call(rbind, X_source)
+  # y_source_vec = do.call(rbind, y_source)
+  # prop.re1 <- tryCatch(Trans.lasso(rbind(X_target, X_source_matrix),
+  #                                  c(y_target, y_source_vec), n.vec,
+  #                                  I.til = 1:round(n_target/2), l1 = T), error = function(e) NULL)
 
-  prop.re2 <- tryCatch(Trans.lasso(rbind(X_target, X_source_matrix),
-                                   c(y_target, y_source_vec), n.vec,
-                                   I.til = (round(n_target/2)+1):n_target, l1=T), error = function(e) NULL)
-  if(!is.null(prop.re1) & !is.null(prop.re2)){
-    beta.prop <- c(beta_target[1], (prop.re1$beta.hat + prop.re2$beta.hat) / 2)
-    gamma.prop = (prop.re1$theta.hat + prop.re2$theta.hat) / 2
-  }else{
-    beta.prop = rep(NA, length(beta_target))
-    gamma.prop = NA
-  }
+  # prop.re2 <- tryCatch(Trans.lasso(rbind(X_target, X_source_matrix),
+  #                                  c(y_target, y_source_vec), n.vec,
+  #                                  I.til = (round(n_target/2)+1):n_target, l1=T), error = function(e) NULL)
+  # if(!is.null(prop.re1) & !is.null(prop.re2)){
+  #   beta.prop <- c(beta_target[1], (prop.re1$beta.hat + prop.re2$beta.hat) / 2)
+  #   gamma.prop = (prop.re1$theta.hat + prop.re2$theta.hat) / 2
+  # }else{
+  #   beta.prop = rep(NA, length(beta_target))
+  #   gamma.prop = NA
+  # }
+  beta.prop = rep(0, length(beta_target))
   result = data.frame(
     `target_only` = as.vector(beta_target),
     `linear_source_beta` = as.vector(beta_linear_source),
